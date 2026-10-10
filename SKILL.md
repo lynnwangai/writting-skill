@@ -1,6 +1,6 @@
 ---
 name: rednote-article-cards
-description: Convert a finished Chinese TXT or Markdown article into reviewed, reference-styled RedNote image cards in this repository. Use for article structure, cover-copy approval, semantic pagination, rendering, or revising a generated card set; do not use for article rewriting or publishing.
+description: Convert a finished Chinese TXT or Markdown article into semantically structured Markdown and, when requested, reviewed reference-styled RedNote image cards in this repository. Use for TXT-to-Markdown conversion, article structure, editorial emphasis, cover-copy approval, semantic pagination, rendering, or revising a generated card set; do not use for article rewriting or publishing.
 ---
 
 # RedNote article cards
@@ -14,13 +14,19 @@ Read `PROJECT_CONTEXT.md`, `REDNOTE_CODEX_PROJECT_BRIEF.md`, and `docs/semantic-
 1. Put or locate the finished UTF-8 `.txt` source. For TXT input, run `scripts/txt_to_md.py` without `--infer-structure` to create a versioned, faithful `rendered.md` and `conversion.json`.
 2. Read the entire article. Add semantic Markdown without changing its words or order:
    - preserve explicit headings;
-   - use ordinary Markdown for headings, bold emphasis, quotations, and lists;
+   - classify genuine headings, quotations, lists, and numbered frameworks;
+   - complete the editorial emphasis pass in `docs/semantic-markdown.md`: wrap exact source wording in `**...**` for the central thesis, key distinctions or reversals, section conclusions, and final synthesis;
+   - keep emphasis restrained and meaningful; do not bold headings again, supporting examples, setup-only sentences, or text merely to decorate a page;
+   - keep uncertain passages as prose instead of inventing a stronger structure.
+3. Check the semantic draft before presenting it. Reading only its title, headings, and bold passages should recover an accurate skeleton of the argument. Every emphasized passage must still be exact source text, and all source sentences must remain once and in order.
+4. If the request ends at TXT-to-Markdown conversion, return the versioned `rendered.md` for human review and stop. Page markers and cover metadata may remain incomplete unless the user also asked to prepare cards.
+5. For a card workflow:
    - insert one supported `<!-- page: TYPE -->` marker for every body card;
    - use `<!-- column -->` only for a genuine two-sided comparison;
-   - keep uncertain passages as prose instead of inventing a stronger structure.
-3. Propose the cover's `cover_lead`, `cover_focus`, `cover_bridge`, and `cover_emphasis`. Keep the article's epistemic strength. Add the proposed values to front matter only after showing them to the user.
-4. Before rendering, show the user a compact review summary: cover copy, page count, page types/headings, and every uncertain classification. Pause for approval when the cover or structure has not already been approved.
-5. After approval, run the single renderer with source reconciliation:
+   - propose the cover's `cover_lead`, `cover_focus`, `cover_bridge`, and `cover_emphasis`, preserving the article's epistemic strength;
+   - add proposed cover values to front matter only after showing them to the user.
+6. Before rendering, show the user a compact review summary: cover copy, page count, page types/headings, and every uncertain classification. Pause for approval when the cover or structure has not already been approved.
+7. After approval, run the single renderer with source reconciliation:
 
    ```sh
    .venv/bin/python scripts/render_article.py \
@@ -28,8 +34,8 @@ Read `PROJECT_CONTEXT.md`, `REDNOTE_CODEX_PROJECT_BRIEF.md`, and `docs/semantic-
      --source-txt inputs/<article>.txt
    ```
 
-6. If the renderer reports overflow, adjust page markers at paragraph or sentence boundaries. Do not shrink body type below the theme defaults and do not rewrite or drop text to make a page fit. Keep headings with related body, list items intact, and short numbered arguments intact.
-7. Present `contact-sheet.png`, the output directory, and any manifest warnings. Do not publish or automate upload.
+8. If the renderer reports overflow, adjust page markers at paragraph or sentence boundaries. Do not shrink body type below the theme defaults and do not rewrite or drop text to make a page fit. Keep headings with related body, list items intact, and short numbered arguments intact.
+9. Present `contact-sheet.png`, the output directory, and any manifest warnings. Do not publish or automate upload.
 
 ## Semantic decisions
 

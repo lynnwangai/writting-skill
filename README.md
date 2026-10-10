@@ -73,15 +73,21 @@ In this project, use a request such as:
 
 > Use the repository's `SKILL.md` to turn `inputs/my-article.txt` into RedNote cards. Preserve every sentence and its order. Prepare the semantic Markdown and proposed cover headline, then stop for my approval before rendering.
 
+For conversion without card planning yet:
+
+> Use the repository's `SKILL.md` to convert `inputs/my-article.txt` to semantic Markdown. Include the editorial emphasis pass, preserve every sentence and its order, and stop with `rendered.md` for my review.
+
 Codex will use the skill to:
 
 1. create a versioned run folder;
 2. convert the TXT faithfully;
 3. read the entire article;
-4. add semantic Markdown and page markers;
-5. propose the four-part cover headline;
-6. show the page plan and uncertain classifications;
-7. wait for approval.
+4. classify headings, lists, frameworks, and other semantic structure;
+5. select the article's thesis, key reversals, section conclusions, and final synthesis for restrained `**bold emphasis**` using exact source wording;
+6. add page markers;
+7. propose the four-part cover headline;
+8. show the page plan and uncertain classifications;
+9. wait for approval.
 
 The LLM work happens in Codex, not inside a Python CLI.
 
@@ -154,7 +160,7 @@ The Markdown determines meaning:
 
 - `#` — major heading;
 - `##` — secondary heading;
-- `**text**` — emphasis;
+- `**text**` — an LLM-selected thesis, key distinction, section conclusion, or final synthesis, using exact source wording;
 - `- item` — bullet list;
 - `1. item` — numbered framework;
 - `> text` — quotation or callout;
@@ -162,6 +168,8 @@ The Markdown determines meaning:
 - `<!-- column -->` — a column boundary inside a `two_column` page.
 
 The CSS theme—not the Markdown—determines the red rules, typography, spacing, numbering style, and callout colors. The full contract and examples are in [`docs/semantic-markdown.md`](docs/semantic-markdown.md).
+
+The direct `txt_to_md.py` command intentionally does not decide what is important. It creates a lossless draft. The repository skill performs the semantic structure and editorial-emphasis pass because those choices require reading the full argument. For a Markdown-only request, Codex stops after that pass and returns `rendered.md`; cover planning and pagination are only required when preparing cards.
 
 ### 5. Approve the cover and structure
 

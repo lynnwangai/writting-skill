@@ -352,6 +352,27 @@ def markdown_visible_text(value: str) -> str:
     return "".join(parser.parts)
 
 
+def semantic_source_text(value: str) -> str:
+    """Remove project Markdown syntax without interpreting source prose as Markdown.
+
+    The same normalization is applied to the plain source and reviewed Markdown.
+    This avoids treating an original line such as ``1. Heading`` as a generated
+    list marker on only one side of the comparison.
+    """
+    value = PAGE_MARKER.sub("", value)
+    value = COLUMN_MARKER.sub("", value)
+    normalized_lines: list[str] = []
+    for line in value.splitlines():
+        line = re.sub(r"^\s{0,3}#{1,6}\s+", "", line)
+        line = re.sub(r"^\s{0,3}>\s?", "", line)
+        line = re.sub(r"^\s{0,3}[-+*]\s+", "", line)
+        line = re.sub(r"^\s{0,3}\d+[.)]\s+", "", line)
+        line = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", line)
+        line = line.replace("**", "").replace("__", "").replace("`", "")
+        normalized_lines.append(line)
+    return "\n".join(normalized_lines)
+
+
 def comparison_key(value: str) -> str:
     return re.sub(r"\s+", "", html.unescape(value))
 
@@ -377,8 +398,8 @@ def reconcile_source(article: Article, source_path: Path | None) -> dict[str, ob
             lines.pop(first)
         source = "\n".join(lines)
 
-    source_key = comparison_key(markdown_visible_text(source))
-    rendered_key = comparison_key(markdown_visible_text(article.body))
+    source_key = comparison_key(semantic_source_text(source))
+    rendered_key = comparison_key(semantic_source_text(article.body))
     if source_key != rendered_key:
         prefix = 0
         for left, right in zip(source_key, rendered_key):
@@ -459,9 +480,9 @@ async def render_article(
                     "file": path.name,
                     "sha256": sha256_file(path),
                     "dimensions": [WIDTH, HEIGHT],
-                    "source_character_count": len(comparison_key(markdown_visible_text(page.markdown))),
+                    "source_character_count": len(comparison_key(semantic_source_text(page.markdown))),
                     "source_text_sha256": sha256_bytes(
-                        comparison_key(markdown_visible_text(page.markdown)).encode("utf-8")
+                        comparison_key(semantic_source_text(page.markdown)).encode("utf-8")
                     ),
                 }
             )

@@ -33,9 +33,16 @@ article body. `conversion.json` records source/output hashes and every mechanica
 transformation. By default the converter performs no semantic classification and
 does not rewrite, summarize, reorder, or paginate the article.
 
-The normal Codex workflow stops after faithful conversion. `SKILL.md` is the
-authoritative semantic layer: Codex reads the whole article, adds semantic
-Markdown and page markers, proposes the cover split, and waits for approval.
+The command stops after faithful conversion. `SKILL.md` is the authoritative
+semantic layer: Codex reads the whole article, classifies its structure, and
+performs a restrained editorial-emphasis pass using exact source wording. The
+emphasis pass selects the central thesis, key distinctions or reversals,
+section-level conclusions, and final synthesis; it does not apply bolding by a
+fixed quota.
+
+For a Markdown-only request, Codex returns the semantic `rendered.md` for human
+review at that point. For a card request, it continues with page markers,
+proposes the cover split, and waits for approval before rendering.
 
 An older conservative regex pass remains available for compatibility:
 

@@ -6,8 +6,10 @@ from scripts.render_article import (
     PAGE_TYPES,
     SemanticPage,
     build_body_html,
+    comparison_key,
     parse_article,
     reconcile_source,
+    semantic_source_text,
 )
 
 
@@ -36,6 +38,14 @@ class ArticleRendererTests(unittest.TestCase):
             )
             with self.assertRaises(ValueError):
                 reconcile_source(article, changed)
+
+    def test_numbered_source_heading_matches_markdown_heading(self):
+        source = "1. 原始编号标题\n正文"
+        reviewed = "## 1. 原始编号标题\n\n正文"
+        self.assertEqual(
+            comparison_key(semantic_source_text(source)),
+            comparison_key(semantic_source_text(reviewed)),
+        )
 
     def test_body_html_escapes_raw_html(self):
         document = build_body_html(

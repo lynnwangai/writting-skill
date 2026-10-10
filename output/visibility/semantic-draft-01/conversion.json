@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "stage": "txt_to_semantic_md",
+  "source": {
+    "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/output/visibility/semantic-draft-01/source.txt",
+    "filename": "visibility.txt",
+    "sha256": "199d4c8a2fc4036f503fdac79a5ea4aef7966278f7f446cce763d6c9b7d00a56",
+    "encoding": "utf-8",
+    "original_container": {
+      "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/inputs/visibility.txt",
+      "sha256": "a5b5f5194f5ddaba71794b2b63d14161e546e8a2572e57e31619dbcc8d131278",
+      "detected_format": "rtf"
+    }
+  },
+  "output": {
+    "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/output/visibility/semantic-draft-01/rendered.md",
+    "sha256": "e4e5c77ba471b6fa54b8c0152b60bc21b28b81262df98479dbf850de24500dce"
+  },
+  "metadata": {
+    "title": "你以为这是体面，可能只是在默默把自己的功劳让出去",
+    "subtitle": "",
+    "series_label": "职场观察",
+    "footer_label": "",
+    "source_file": "visibility.txt",
+    "source_format": "txt",
+    "conversion_mode": "structured"
+  },
+  "transformations": [
+    {
+      "type": "decode_rtf_container",
+      "body_text_changed": false
+    },
+    {
+      "type": "add_final_newline"
+    },
+    {
+      "type": "add_yaml_front_matter",
+      "body_text_changed": false
+    },
+    {
+      "type": "promote_first_line_to_title",
+      "text": "你以为这是体面，可能只是在默默把自己的功劳让出去",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "一、先解决最现实的问题：怎么让自己的功劳被充分看见？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "1. 不要为了显得讨喜，把自己的功劳删掉",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "2. 不要汇报“我有多辛苦”，把判断、风险和协调讲清楚",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "3. 重要成果需要在不同节点重新进入信息流",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "二、为什么明明知道这些，我们还是会觉得“不体面”？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "1. 两层规训：制度训练自我约束，叙事把自我约束变成美德",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "2. 真正的结构错位，是把高观察环境里的规则带进了低观察组织",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "3. 社交风险是真的，但它不是固定成本",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "三、如果选择不冒社交风险，代价是什么？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "1. 主管评价的不是完整事实，而是进入视野的信息",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "2. 团队成果不会自动告诉别人，你到底贡献了什么",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "3. 组织记忆会同时丢失内容和来源",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "四、真正需要区分的，是价值，还是规训",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“我不想抢功。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“这样太功利了。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“总提自己显得很爱表现。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“为了这点利益去争，好像很难看。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "Likeable Badass = Assertive + Warm",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "体面不应该要求一个人先把自己删掉。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "看清结构、不过度自我牺牲，是一种必要的清醒。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "references_heading_and_list",
+      "item_count": 14,
+      "body_text_changed": false
+    },
+    {
+      "type": "editorial_emphasis_pass",
+      "role": "key_sentence",
+      "item_count": 12,
+      "body_text_changed": false
+    }
+  ],
+  "semantic_classification": "heuristic_with_editorial_review"
+}

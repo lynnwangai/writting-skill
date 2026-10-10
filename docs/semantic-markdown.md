@@ -71,6 +71,27 @@ Ordinary paragraph text.
 
 The visual theme—not the Markdown—controls the red rules, font sizes, spacing, numbering treatment, and callout colors.
 
+## Editorial emphasis pass
+
+Bold is part of the semantic conversion, not a cosmetic afterthought. After identifying headings and lists, read the whole article and wrap the smallest intact source sentence or clause that carries one of these roles in `**...**`:
+
+- the article's central thesis;
+- a key distinction, reversal, or causal mechanism;
+- a section-level conclusion or decision rule;
+- the final synthesis.
+
+Use exact source wording. Do not paraphrase, shorten, combine, or strengthen a claim to make it more emphatic. Do not bold a heading again, a supporting example, a citation, a setup-only sentence, or an entire long paragraph when one sentence carries the point. Do not force a quota or add emphasis merely to balance a page.
+
+The result should have a restrained reading rhythm. As a quality check, skim only the title, headings, and bold passages: together they should form an accurate outline of the argument. A major section should normally expose its key claim when one exists; if the source contains no clear claim, leave it unbolded rather than inventing one.
+
+Example:
+
+```md
+很多人以为，只要工作做得足够好，价值自然会被看见。
+
+**但组织能够分配的，往往不是全部价值，而是它能够识别的价值。**
+```
+
 ## Examples by page type
 
 ### Section introduction
