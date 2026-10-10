@@ -4,7 +4,7 @@ A local workflow for turning a finished Chinese analytical article into reviewed
 
 The article remains the intellectual product. Codex uses the repository's [`SKILL.md`](SKILL.md) to identify structure and propose page breaks; the renderer then applies one deterministic visual system and exports exact 1080×1440 PNG files.
 
-![End-to-end page-type proof](tests/article-render/contact-sheet.png)
+
 
 ## What works now
 
