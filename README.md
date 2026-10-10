@@ -1,4 +1,4 @@
-# RedNote Editorial Renderer
+# RedNote Longform Editorial Renderer
 
 A local workflow for turning a finished Chinese analytical article into reviewed RedNote/Xiaohongshu image cards without re-typesetting it by hand.
 
