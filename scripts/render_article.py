@@ -36,6 +36,8 @@ COVER_TEMPLATE_PATH = ROOT / "assets" / "templates" / "editorial-reference-cover
 CARD_TEMPLATE_PATH = ROOT / "assets" / "templates" / "editorial-reference-card.html"
 WIDTH = 1080
 HEIGHT = 1440
+MIN_CONTINUOUS_FILL_RATIO = 0.75
+FOOTER_CLEARANCE = 20
 UPSTREAM_COMMIT = "ac61b840cbe3b378effd46484c1d92f697372a0d"
 PAGE_TYPES = {
     "section_intro",
@@ -53,6 +55,7 @@ PAGE_MARKER = re.compile(
 COLUMN_MARKER = re.compile(r"^<!--\s*column\s*-->\s*$", re.MULTILINE)
 FRONT_MATTER = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 MARKDOWN_IMAGE = re.compile(r"!\[[^\]]*\]\([^)]*\)")
+AUTHOR_SIGNOFF_MARKER = "<!-- author-signoff -->"
 
 
 @dataclass(frozen=True)
@@ -68,6 +71,35 @@ class Article:
     body: str
 
 
+def density_is_required(page_number: int, page_count: int) -> bool:
+    """Every body page except the final page must meet the fill threshold."""
+    return page_number < page_count
+
+
+def body_fill_ratio(metrics: dict[str, float]) -> float:
+    """Return the fraction of usable body height occupied by rendered content."""
+    usable_bottom = metrics["ruleTop"] - FOOTER_CLEARANCE
+    usable_height = usable_bottom - metrics["contentTop"]
+    used_height = metrics["contentBottom"] - metrics["contentTop"]
+    return used_height / usable_height if usable_height else 0
+
+
+def require_page_density(
+    metrics: dict[str, float],
+    page_number: int,
+    page_count: int,
+    page_type: str,
+) -> float:
+    """Validate the continuous-flow density invariant and return its ratio."""
+    fill_ratio = body_fill_ratio(metrics)
+    if density_is_required(page_number, page_count) and fill_ratio < MIN_CONTINUOUS_FILL_RATIO:
+        raise ValueError(
+            f"page {page_number} ({page_type}) is underfilled: "
+            f"fill ratio {fill_ratio:.3f} is below {MIN_CONTINUOUS_FILL_RATIO:.2f}"
+        )
+    return fill_ratio
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("markdown", type=Path, help="Reviewed semantic Markdown file")
@@ -80,6 +112,16 @@ def parse_args() -> argparse.Namespace:
         "--source-txt",
         type=Path,
         help="Original UTF-8 TXT file for exact content reconciliation",
+    )
+    parser.add_argument(
+        "--preflight",
+        action="store_true",
+        help="Measure cover fit, overflow, and page density without writing PNGs",
+    )
+    parser.add_argument(
+        "--allow-reviewed-edits",
+        action="store_true",
+        help="Record explicit human-approved text edits instead of requiring exact source equality",
     )
     return parser.parse_args()
 
@@ -191,6 +233,17 @@ def safe_markdown(value: str) -> str:
 
 def build_body_content(page: SemanticPage) -> str:
     if page.kind != "two_column":
+        if AUTHOR_SIGNOFF_MARKER in page.markdown:
+            if page.markdown.count(AUTHOR_SIGNOFF_MARKER) != 1:
+                raise ValueError("a page may contain only one author-signoff marker")
+            before, after = page.markdown.split(AUTHOR_SIGNOFF_MARKER, 1)
+            if not re.match(r"^\s*>\s+", after):
+                raise ValueError("author-signoff marker must be followed by a blockquote")
+            before_html = safe_markdown(before.strip()) if before.strip() else ""
+            after_html = safe_markdown(after.strip()).replace(
+                "<blockquote>", '<blockquote class="author-signoff">', 1
+            )
+            return before_html + after_html
         return safe_markdown(page.markdown)
 
     parts = COLUMN_MARKER.split(page.markdown)
@@ -235,7 +288,7 @@ async def screenshot_document(
     output: Path,
     *,
     cover: bool,
-) -> None:
+) -> dict[str, float]:
     page = await browser.new_page(
         viewport={"width": WIDTH, "height": HEIGHT}, device_scale_factor=1
     )
@@ -265,6 +318,7 @@ async def screenshot_document(
                 return {
                     width: document.body.scrollWidth,
                     height: document.body.scrollHeight,
+                    contentTop: content.top,
                     contentBottom: content.bottom,
                     ruleTop: rule.top,
                     contentRight: content.right
@@ -273,7 +327,7 @@ async def screenshot_document(
         )
         if metrics["width"] > WIDTH or metrics["height"] > HEIGHT:
             raise ValueError(f"body page overflows its canvas: {metrics}")
-        if metrics["contentBottom"] >= metrics["ruleTop"] - 28:
+        if metrics["contentBottom"] >= metrics["ruleTop"] - FOOTER_CLEARANCE:
             raise ValueError(f"body content collides with the footer: {metrics}")
         if metrics["contentRight"] > WIDTH - 50:
             raise ValueError(f"body content overflows horizontally: {metrics}")
@@ -285,6 +339,111 @@ async def screenshot_document(
         raise ValueError(
             f"expected {WIDTH}x{HEIGHT}, got {dimensions[0]}x{dimensions[1]} for {output.name}"
         )
+    return metrics
+
+
+async def inspect_document(
+    browser: Browser,
+    document: str,
+    *,
+    cover: bool,
+) -> dict[str, float]:
+    """Measure and validate one document without creating an image."""
+    page = await browser.new_page(
+        viewport={"width": WIDTH, "height": HEIGHT}, device_scale_factor=1
+    )
+    await page.set_content(document, wait_until="load")
+    await page.evaluate("document.fonts.ready")
+    if cover:
+        metrics = await page.evaluate(
+            """() => ({
+                width: document.body.scrollWidth,
+                height: document.body.scrollHeight,
+                headlineBottom: document.querySelector('.cover-title').getBoundingClientRect().bottom,
+                ruleTop: document.querySelector('.cover-bottom-rule').getBoundingClientRect().top,
+                subtitleBottom: document.querySelector('.cover-subtitle').getBoundingClientRect().bottom
+            })"""
+        )
+        if metrics["width"] > WIDTH or metrics["height"] > HEIGHT:
+            raise ValueError(f"cover overflows its canvas: {metrics}")
+        if metrics["headlineBottom"] >= metrics["ruleTop"] - 20:
+            raise ValueError(f"cover headline collides with the lower rule: {metrics}")
+        if metrics["subtitleBottom"] > HEIGHT - 30:
+            raise ValueError(f"cover subtitle overflows its canvas: {metrics}")
+    else:
+        metrics = await page.evaluate(
+            """() => {
+                const content = document.querySelector('.content').getBoundingClientRect();
+                const rule = document.querySelector('.page-rule').getBoundingClientRect();
+                return {
+                    width: document.body.scrollWidth,
+                    height: document.body.scrollHeight,
+                    contentTop: content.top,
+                    contentBottom: content.bottom,
+                    ruleTop: rule.top,
+                    contentRight: content.right
+                };
+            }"""
+        )
+        if metrics["width"] > WIDTH or metrics["height"] > HEIGHT:
+            raise ValueError(f"body page overflows its canvas: {metrics}")
+        if metrics["contentBottom"] >= metrics["ruleTop"] - FOOTER_CLEARANCE:
+            raise ValueError(f"body content collides with the footer: {metrics}")
+        if metrics["contentRight"] > WIDTH - 50:
+            raise ValueError(f"body content overflows horizontally: {metrics}")
+    await page.close()
+    return metrics
+
+
+async def preflight_article(article_path: Path, source_path: Path | None) -> dict[str, object]:
+    """Validate an approved review draft without producing render artifacts."""
+    article_path = article_path.expanduser().resolve()
+    source_path = source_path.expanduser().resolve() if source_path else None
+    article = parse_article(article_path)
+    reconciliation = reconcile_source(article, source_path)
+    page_records: list[dict[str, object]] = []
+    density_violations: list[str] = []
+    async with async_playwright() as playwright:
+        browser = await playwright.chromium.launch(headless=True)
+        await inspect_document(browser, build_cover_html(article.metadata), cover=True)
+        for index, semantic_page in enumerate(article.pages, start=1):
+            try:
+                metrics = await inspect_document(
+                    browser,
+                    build_body_html(semantic_page, index),
+                    cover=False,
+                )
+            except ValueError as error:
+                raise ValueError(
+                    f"page {index} ({semantic_page.kind}) failed layout inspection: {error}"
+                ) from error
+            fill_ratio = body_fill_ratio(metrics)
+            density_checked = density_is_required(index, len(article.pages))
+            if density_checked and fill_ratio < MIN_CONTINUOUS_FILL_RATIO:
+                density_violations.append(
+                    f"page {index} ({semantic_page.kind}) is underfilled: "
+                    f"fill ratio {fill_ratio:.3f} is below {MIN_CONTINUOUS_FILL_RATIO:.2f}"
+                )
+            page_records.append(
+                {
+                    "number": index,
+                    "type": semantic_page.kind,
+                    "content_bottom": round(metrics["contentBottom"], 3),
+                    "fill_ratio": round(fill_ratio, 3),
+                    "density_checked": density_checked,
+                }
+            )
+        await browser.close()
+    if density_violations:
+        raise ValueError("; ".join(density_violations))
+    return {
+        "status": "passed",
+        "article": str(article_path),
+        "page_count": len(article.pages),
+        "minimum_continuous_fill_ratio": MIN_CONTINUOUS_FILL_RATIO,
+        "source_reconciliation": reconciliation,
+        "pages": page_records,
+    }
 
 
 def contact_sheet_html(paths: list[Path], page_types: list[str]) -> tuple[str, int, int]:
@@ -346,6 +505,7 @@ class TextExtractor(HTMLParser):
 def markdown_visible_text(value: str) -> str:
     without_markers = PAGE_MARKER.sub("", value)
     without_markers = COLUMN_MARKER.sub("", without_markers)
+    without_markers = without_markers.replace(AUTHOR_SIGNOFF_MARKER, "")
     rendered = safe_markdown(without_markers)
     parser = TextExtractor()
     parser.feed(rendered)
@@ -361,6 +521,7 @@ def semantic_source_text(value: str) -> str:
     """
     value = PAGE_MARKER.sub("", value)
     value = COLUMN_MARKER.sub("", value)
+    value = value.replace(AUTHOR_SIGNOFF_MARKER, "")
     normalized_lines: list[str] = []
     for line in value.splitlines():
         line = re.sub(r"^\s{0,3}#{1,6}\s+", "", line)
@@ -368,7 +529,10 @@ def semantic_source_text(value: str) -> str:
         line = re.sub(r"^\s{0,3}[-+*]\s+", "", line)
         line = re.sub(r"^\s{0,3}\d+[.)]\s+", "", line)
         line = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", line)
-        line = line.replace("**", "").replace("__", "").replace("`", "")
+        # Apply symmetrically to source and reviewed Markdown so literal marks,
+        # when present in the source, do not create a one-sided comparison.
+        # This supports bold, red accent, and bold-red review syntax.
+        line = line.replace("*", "").replace("_", "").replace("`", "")
         normalized_lines.append(line)
     return "\n".join(normalized_lines)
 
@@ -377,7 +541,12 @@ def comparison_key(value: str) -> str:
     return re.sub(r"\s+", "", html.unescape(value))
 
 
-def reconcile_source(article: Article, source_path: Path | None) -> dict[str, object]:
+def reconcile_source(
+    article: Article,
+    source_path: Path | None,
+    *,
+    allow_reviewed_edits: bool = False,
+) -> dict[str, object]:
     if source_path is None:
         return {
             "status": "not_requested",
@@ -389,7 +558,8 @@ def reconcile_source(article: Article, source_path: Path | None) -> dict[str, ob
     except UnicodeDecodeError as exc:
         raise ValueError("source TXT must be UTF-8 encoded") from exc
     source = source.replace("\r\n", "\n").replace("\r", "\n")
-    title = metadata_text(article.metadata, "title")
+    source_title = metadata_text(article.metadata, "source_title")
+    title = source_title or metadata_text(article.metadata, "title")
     lines = source.splitlines()
     first = next((index for index, line in enumerate(lines) if line.strip()), None)
     if first is not None and title and lines[first].strip() == title:
@@ -406,10 +576,20 @@ def reconcile_source(article: Article, source_path: Path | None) -> dict[str, ob
             if left != right:
                 break
             prefix += 1
-        raise ValueError(
-            "source reconciliation failed: reviewed Markdown changes, drops, duplicates, "
-            f"or reorders source text near normalized character {prefix}"
-        )
+        if not allow_reviewed_edits:
+            raise ValueError(
+                "source reconciliation failed: reviewed Markdown changes, drops, duplicates, "
+                f"or reorders source text near normalized character {prefix}"
+            )
+        return {
+            "status": "human_approved_edits",
+            "source_path": str(source_path.resolve()),
+            "source_sha256": sha256_bytes(raw),
+            "source_normalized_character_count": len(source_key),
+            "reviewed_normalized_character_count": len(rendered_key),
+            "first_difference_at_normalized_character": prefix,
+            "note": "Original source is preserved; reviewed text changes were explicitly approved by the user.",
+        }
     return {
         "status": "passed",
         "source_path": str(source_path.resolve()),
@@ -436,12 +616,18 @@ async def render_article(
     article_path: Path,
     output_dir: Path,
     source_path: Path | None,
+    *,
+    allow_reviewed_edits: bool = False,
 ) -> Path:
     article_path = article_path.expanduser().resolve()
     output_dir = output_dir.expanduser().resolve()
     source_path = source_path.expanduser().resolve() if source_path else None
     article = parse_article(article_path)
-    reconciliation = reconcile_source(article, source_path)
+    reconciliation = reconcile_source(
+        article,
+        source_path,
+        allow_reviewed_edits=allow_reviewed_edits,
+    )
     output_dir.mkdir(parents=True, exist_ok=True)
     assert_outputs_available(output_dir, len(article.pages))
 
@@ -459,20 +645,32 @@ async def render_article(
             await screenshot_document(
                 browser, build_cover_html(article.metadata), cover_path, cover=True
             )
+            page_metrics: list[dict[str, float]] = []
             for index, semantic_page in enumerate(article.pages, start=1):
-                await screenshot_document(
+                metrics = await screenshot_document(
                     browser,
                     build_body_html(semantic_page, index),
                     card_paths[index - 1],
                     cover=False,
                 )
+                require_page_density(
+                    metrics,
+                    index,
+                    len(article.pages),
+                    semantic_page.kind,
+                )
+                page_metrics.append(metrics)
             all_paths = [cover_path, *card_paths]
             all_types = ["cover", *[page.kind for page in article.pages]]
             await render_contact_sheet(browser, all_paths, all_types, contact_path)
             await browser.close()
 
         page_records = []
-        for index, (page, path) in enumerate(zip(article.pages, card_paths), start=1):
+        for index, (page, path, metrics) in enumerate(
+            zip(article.pages, card_paths, page_metrics),
+            start=1,
+        ):
+            fill_ratio = body_fill_ratio(metrics)
             page_records.append(
                 {
                     "number": index,
@@ -480,6 +678,8 @@ async def render_article(
                     "file": path.name,
                     "sha256": sha256_file(path),
                     "dimensions": [WIDTH, HEIGHT],
+                    "fill_ratio": round(fill_ratio, 3),
+                    "density_checked": density_is_required(index, len(article.pages)),
                     "source_character_count": len(comparison_key(semantic_source_text(page.markdown))),
                     "source_text_sha256": sha256_bytes(
                         comparison_key(semantic_source_text(page.markdown)).encode("utf-8")
@@ -543,8 +743,31 @@ def main() -> int:
         else article_path.parent
     )
     try:
+        if args.preflight:
+            if args.allow_reviewed_edits:
+                article = parse_article(article_path)
+                reconcile_source(
+                    article,
+                    args.source_txt,
+                    allow_reviewed_edits=True,
+                )
+                result = asyncio.run(preflight_article(article_path, None))
+                result["source_reconciliation"] = reconcile_source(
+                    article,
+                    args.source_txt,
+                    allow_reviewed_edits=True,
+                )
+            else:
+                result = asyncio.run(preflight_article(article_path, args.source_txt))
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+            return 0
         contact_sheet = asyncio.run(
-            render_article(article_path, output_dir, args.source_txt)
+            render_article(
+                article_path,
+                output_dir,
+                args.source_txt,
+                allow_reviewed_edits=args.allow_reviewed_edits,
+            )
         )
     except (
         FileExistsError,

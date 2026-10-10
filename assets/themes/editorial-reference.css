@@ -167,6 +167,7 @@ body {
   color: #294b5b;
 }
 .content blockquote p { margin: 0; font-weight: 600; line-height: 1.6; }
+.content blockquote.author-signoff { margin-top: 72px; }
 .content ul,
 .content ol { margin: 12px 0 34px; padding: 0; list-style: none; }
 .content li { position: relative; font-size: 33px; line-height: 1.66; }

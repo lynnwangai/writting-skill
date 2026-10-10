@@ -9,6 +9,7 @@ Every file starts with YAML front matter:
 ```yaml
 ---
 title: "完整文章标题"
+source_title: "源文件第一行的原始标题"
 series_label: "职场观察"
 topic_label: "功劳与可见度"
 cover_lead: "你以为这是"
@@ -22,7 +23,7 @@ conversion_mode: "semantic"
 ---
 ```
 
-The four `cover_*` fields are required. `title`, labels, and `subtitle` are metadata; the renderer does not silently derive or truncate the approved cover copy.
+The four `cover_*` fields are required. `title`, labels, and `subtitle` are metadata; the renderer does not silently derive or truncate the approved cover copy. Set `source_title` to the source file's original first-line title when the reviewed `title` changes; this preserves reconciliation without changing the immutable source snapshot.
 
 ## Page markers
 
@@ -56,7 +57,11 @@ Page markers determine layout and page breaks. The renderer never chooses a diff
 
 Ordinary paragraph text.
 
-**Visually important sentence.**
+**Bold black sentence.**
+
+*Red accent sentence.*
+
+***Bold red sentence.***
 
 > Quotation or callout text.
 
@@ -70,6 +75,33 @@ Ordinary paragraph text.
 ```
 
 The visual theme—not the Markdown—controls the red rules, font sizes, spacing, numbering treatment, and callout colors.
+
+When the source ends with an author self-introduction or sign-off, semantic
+conversion must preserve its exact wording and encode it as a final blockquote
+immediately before references. This is a semantic signature/callout, not
+ordinary prose or an invented CTA:
+
+```md
+<!-- author-signoff -->
+
+> 我是阿多诺，写职场、权力、心理和社会规则背后的机制。
+```
+
+The editorial theme renders it as the restrained light-blue callout used by the
+reference set.
+
+### Review-visible style roles
+
+The review draft must expose its intended emphasis before rendering:
+
+- `**text**` means bold black;
+- `*text*` means red accent;
+- `***text***` means bold red;
+- `#` means a major heading with the red left rule;
+- `##` means a red underlined secondary heading;
+- `>` means a muted-blue callout.
+
+Record this legend in front matter under `review_style_legend` for card-preparation drafts. The renderer ignores the legend as data; it exists so the reviewer can approve the semantic styling from `rendered.md` itself.
 
 ## Editorial emphasis pass
 
@@ -91,6 +123,12 @@ Example:
 
 **但组织能够分配的，往往不是全部价值，而是它能够识别的价值。**
 ```
+
+## Continuous pagination
+
+Treat the body as one continuous reading flow rather than a stack of isolated section posters. Fill a prose card with the next intact paragraph or semantic unit whenever it fits. A later `#` or `##` heading may appear after preceding prose on the same card when the heading and its first related paragraph both fit.
+
+Before approval, run `scripts/paginate_article.py` so page boundaries come from the active HTML/CSS rather than manual estimates. It uses sequential first-fit packing over semantic atoms, sentence-boundary fallback for ordinary prose, and deterministic tail balancing. Every body page except the last must use at least 75% of the available content height and remain clear of the footer. The final body page is the only density exception; `section_intro`, `cta`, and non-final `references` pages do not receive special exemptions. A page type describes semantic treatment, not permission to leave a card half empty. If the constraints cannot be satisfied without splitting a protected semantic atom, pagination fails visibly for human review.
 
 ## Examples by page type
 

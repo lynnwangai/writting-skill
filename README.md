@@ -84,10 +84,11 @@ Codex will use the skill to:
 3. read the entire article;
 4. classify headings, lists, frameworks, and other semantic structure;
 5. select the article's thesis, key reversals, section conclusions, and final synthesis for restrained `**bold emphasis**` using exact source wording;
-6. add page markers;
-7. propose the four-part cover headline;
-8. show the page plan and uncertain classifications;
-9. wait for approval.
+6. mark intentional red accents with `*red*` or `***bold red***`;
+7. add continuous, density-checked page markers;
+8. write the proposed four-part cover headline into the review Markdown;
+9. show that exact `rendered.md`, its page plan, and uncertain classifications;
+10. wait for approval before generating any PNGs.
 
 The LLM work happens in Codex, not inside a Python CLI.
 
@@ -125,6 +126,7 @@ The reviewed file specifies semantic meaning with ordinary Markdown:
 ```md
 ---
 title: "你以为这是体面，可能只是在默默把自己的功劳让出去"
+source_title: "你以为这是体面，可能只是在默默把自己的功劳让出去"
 series_label: "职场观察"
 topic_label: "功劳与可见度"
 cover_lead: "你以为这是"
@@ -161,15 +163,34 @@ The Markdown determines meaning:
 - `#` — major heading;
 - `##` — secondary heading;
 - `**text**` — an LLM-selected thesis, key distinction, section conclusion, or final synthesis, using exact source wording;
+- `*text*` — red accent;
+- `***text***` — bold red emphasis;
 - `- item` — bullet list;
 - `1. item` — numbered framework;
 - `> text` — quotation or callout;
+- `<!-- author-signoff -->` followed by `> text` — a source-supplied final author signature with dedicated spacing and blue callout styling;
 - `<!-- page: TYPE -->` — page boundary and layout;
 - `<!-- column -->` — a column boundary inside a `two_column` page.
 
 The CSS theme—not the Markdown—determines the red rules, typography, spacing, numbering style, and callout colors. The full contract and examples are in [`docs/semantic-markdown.md`](docs/semantic-markdown.md).
 
-The direct `txt_to_md.py` command intentionally does not decide what is important. It creates a lossless draft. The repository skill performs the semantic structure and editorial-emphasis pass because those choices require reading the full argument. For a Markdown-only request, Codex stops after that pass and returns `rendered.md`; cover planning and pagination are only required when preparing cards.
+The direct `txt_to_md.py` command intentionally does not decide what is important. It creates a lossless draft. The repository skill performs the semantic structure and editorial-emphasis pass because those choices require reading the full argument. For a card request, the review draft must already contain the proposed cover fields, emphasis/color markup, and page markers. Codex shows that exact file and stops; rendering begins only after the user approves it.
+
+Before presenting that review draft, Codex runs a non-rendering density check:
+
+```sh
+.venv/bin/python scripts/paginate_article.py \
+  output/<slug>/<review-id>/semantic.md \
+  output/<slug>/<review-id>/rendered.md \
+  --source-txt output/<slug>/<review-id>/source.txt
+
+.venv/bin/python scripts/render_article.py \
+  output/<slug>/<review-id>/rendered.md \
+  --source-txt output/<slug>/<review-id>/source.txt \
+  --preflight
+```
+
+The paginator deterministically packs browser-measured semantic atoms, splits ordinary prose only at sentence boundaries, protects headings/lists/callouts/numbered arguments, and rebalances a sparse segment tail. Preflight then validates the cover, source preservation, overflow, and continuous-page fill without creating PNGs. Every body card except the final one must fill at least 75% of the available content height; only the final body card is exempt.
 
 ### 5. Approve the cover and structure
 
@@ -218,9 +239,12 @@ The renderer:
 - captures every card at DPR 1;
 - validates exact 1080×1440 physical dimensions;
 - rejects cover collisions and body/footer overflow;
+- rejects non-final pages below the 75% fill threshold, even when preflight was skipped;
 - refuses to replace existing render artifacts;
 - checks the reviewed article against the original TXT;
+- uses `source_title` for reconciliation when the reviewed title or cover differs from the source's original first line, so `source.txt` remains unchanged;
 - writes page types, hashes, dimensions, and structural assignments to `manifest.json`;
+- records each body page's measured fill ratio and whether density enforcement applied;
 - creates a contact sheet for review.
 
 If one page overflows, no partial artifacts are installed. Move the page boundary at a paragraph or sentence boundary, keep semantic units intact, and rerun.

@@ -38,11 +38,31 @@ semantic layer: Codex reads the whole article, classifies its structure, and
 performs a restrained editorial-emphasis pass using exact source wording. The
 emphasis pass selects the central thesis, key distinctions or reversals,
 section-level conclusions, and final synthesis; it does not apply bolding by a
-fixed quota.
+fixed quota. When the source ends with an author self-introduction or sign-off,
+the semantic pass preserves its wording and emits `<!-- author-signoff -->`
+followed by a `>` blockquote immediately before references.
 
 For a Markdown-only request, Codex returns the semantic `rendered.md` for human
 review at that point. For a card request, it continues with page markers,
-proposes the cover split, and waits for approval before rendering.
+proposes the cover split and color roles, runs the non-rendering `--preflight`
+density check, and returns that exact review draft. Final PNG rendering waits
+for explicit approval of the cover, emphasis, color, and pagination in that file.
+
+Before preflight, run `scripts/paginate_article.py` on the semantically reviewed
+Markdown. It replaces provisional page markers using real browser measurements,
+sentence-safe prose splitting, protected semantic atoms, and deterministic tail
+balancing. Manual boundary shuffling is a fallback only when the command reports
+a specific protected atom that cannot satisfy both fit and density constraints.
+
+The review draft must place content as one continuous flow. Preflight requires
+every body page except the final one to fill at least 75% of its available
+content height. When moving one adjacent boundary is not enough, rebalance page
+boundaries across the full article. `section_intro`, CTA, and non-final reference
+pages are not density exceptions.
+
+If the reviewed `title` or cover copy differs from the source file's first-line
+title, preserve the original line in front matter as `source_title`. Do not edit
+the source snapshot to make reconciliation pass.
 
 An older conservative regex pass remains available for compatibility:
 
