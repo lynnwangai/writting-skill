@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "stage": "txt_to_md",
+  "source": {
+    "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/Example-articles-当一个比你有权利的人在占你的便宜，你到底能怎么办.txt",
+    "filename": "Example-articles-当一个比你有权利的人在占你的便宜，你到底能怎么办.txt",
+    "sha256": "c838146b55248cc8de25cf90520059fecb5a6bf2403b45a1e3d43c99a15a9a16",
+    "encoding": "utf-8"
+  },
+  "output": {
+    "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/output/power-and-boundaries/first-txt-conversion/rendered.md",
+    "sha256": "801de6fd509918a2cbbcfd14ba45e6d27ffd08f64b92289c0dad11e4d677dde4"
+  },
+  "metadata": {
+    "title": "当一个比你有权力的人在占你便宜，你到底能怎么办？",
+    "subtitle": "",
+    "series_label": "社会观察",
+    "footer_label": "POWER & BEHAVIOR",
+    "source_file": "Example-articles-当一个比你有权利的人在占你的便宜，你到底能怎么办.txt",
+    "source_format": "txt",
+    "conversion_mode": "faithful"
+  },
+  "transformations": [
+    {
+      "type": "add_final_newline"
+    },
+    {
+      "type": "add_yaml_front_matter",
+      "body_text_changed": false
+    }
+  ],
+  "semantic_classification": "not_performed"
+}

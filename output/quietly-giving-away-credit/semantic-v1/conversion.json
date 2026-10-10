@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "stage": "txt_to_semantic_md",
+  "source": {
+    "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/vendor/xhs-note-creator/assets/example.txt",
+    "filename": "example.txt",
+    "sha256": "5f7b4e32ecdab26fb32a6ea2321177cc97909e47f60c01e7fb7afb409a623c72",
+    "encoding": "utf-8"
+  },
+  "output": {
+    "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/output/quietly-giving-away-credit/semantic-v1/rendered.md",
+    "sha256": "8b62dec333612e1b5cfc2b3097520cbcf8b03094f05bdf182b88c85afbb87b97"
+  },
+  "metadata": {
+    "title": "你以为这是体面，可能只是在默默把自己的功劳让出去",
+    "subtitle": "",
+    "series_label": "社会观察",
+    "footer_label": "POWER & BEHAVIOR",
+    "source_file": "example.txt",
+    "source_format": "txt",
+    "conversion_mode": "structured"
+  },
+  "transformations": [
+    {
+      "type": "add_yaml_front_matter",
+      "body_text_changed": false
+    },
+    {
+      "type": "promote_first_line_to_title",
+      "text": "你以为这是体面，可能只是在默默把自己的功劳让出去",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“没有没有，大家一起做的。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“算了，其他人应该知道是谁先说的。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“如果他们觉得我合适，应该会推荐我吧。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "一、真正危险的不是别人抢你的功劳，而是你从来没有把功劳留下来",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“我知道这种东西你得去争。可我就是做不来。为了一个奖，到处oversell自己。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "为什么“主动让别人知道我做得好”，会让一些人产生近乎道德性的羞耻？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "二、为什么“让功劳属于自己”，会让人不舒服？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“这道题是我做对的。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "某种曾经有回报的行为，后来被我们内化成了人格。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "三、职场真正变掉的，不是人性，而是“谁负责看见你”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“真正好的东西不需要解释。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "无法被读取的价值，很难参与分配。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "四、你不是做得不够多，而可能是价值在中途“掉了”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "能力 → 贡献 → 可见 → 记录 → 归因 → 资源",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "1. 能力 → 贡献",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "2. 贡献 → 可见",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "3. 可见 → 记录",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "4. 记录 → 归因",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“我们团队完成了 X”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“我负责 X 模块并完成 Y”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“其实没什么。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“都是大家的功劳。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“我只是帮了一点忙。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "numbered_subheading",
+      "text": "5. 归因 → 资源",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“谁最值得，就自动落到谁头上。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "先进入候选池的人，才有资格被比较。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "五、为什么我们这么容易相信：“真正属于我的，早晚会回来”？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“真正有能力的人不用天天表现。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“他现在靠包装，以后肯定会露馅。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“领导早晚知道谁是真正干活的人。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "六、最值得警惕的，不是别人太会包装，而是你自己在“主动降权”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“算了，不重要。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "七、谦逊和自我抹除，其实差得很远",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“这个项目是大家一起完成的，我主要负责其中的 X。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“都是大家做的，我其实没做什么。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“这个机会我很感兴趣，如果有可能，我希望参与。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“如果领导觉得我合适，应该会来找我的。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“这个方向最初是我提出的，后来和 X、Y 一起把它完善了。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "健康的自我呈现，不是放大自己，而是不再缩小自己。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "真正的体面，不应该要求你把自己从故事里删掉。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "section_heading",
+      "text": "八、如果你已经这样做了很多年，也没必要再责怪自己",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“我好像真的一直在这样做。”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“我怎么这么傻？”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "不要再主动删除事实。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "emphasis",
+      "text": "能力 → 贡献 → 可见 → 记录 → 归因 → 资源",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "quotation",
+      "text": "“为什么我明明做了很多，最后却没人知道？”",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "过度夸大自己的贡献，和让其他人记住自己的贡献；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "抢别人的功劳，和保留属于自己的功劳；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "把所有关系都当成工具，和主动争取一个合理机会。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "懂事的人，不给别人添麻烦；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "谦虚的人，不主动说自己厉害；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "善良的人，不计较；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "真正有实力的人，不用抢，老师自然看得到。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "谁在汇报；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "谁的名字在材料里；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "谁是项目 owner；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "谁被客户反复提到；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "谁拿到了奖；",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "谁主动申请了下一个机会。",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "这件事如果半年以后重新评价，我的贡献还看得见吗？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "如果领导明天换人，新的人能看懂我做了什么吗？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "如果项目成功了，别人能明确说出哪一部分是我负责的吗？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "如果资源开始分配，我已经进入候选范围了吗？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "我现在的“谦逊”，是在尊重别人，还是在删除事实？",
+      "body_text_changed": false
+    },
+    {
+      "type": "classify_block",
+      "role": "bullet_item",
+      "text": "这几个问题，我觉得比“我要不要学会邀功”有用得多。",
+      "body_text_changed": false
+    }
+  ],
+  "semantic_classification": "conservative_heuristic"
+}

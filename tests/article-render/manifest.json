@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "renderer": {
+    "name": "rednote-editorial-renderer",
+    "upstream": "cnfjlhj/xhs-note-creator",
+    "upstream_commit": "ac61b840cbe3b378effd46484c1d92f697372a0d",
+    "canvas": [
+      1080,
+      1440
+    ],
+    "device_scale_factor": 1
+  },
+  "input": {
+    "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/tests/article-render/sample.md",
+    "sha256": "b06f5afedae5fb23923595a987e77e9f3dd4688a1288f74b732f68f7602c6256"
+  },
+  "cover": {
+    "file": "cover.png",
+    "sha256": "34ede45371ec22c84f778515cadd593dad707c1fff326ef571e3e79810cb77bd",
+    "dimensions": [
+      1080,
+      1440
+    ]
+  },
+  "pages": [
+    {
+      "number": 1,
+      "type": "section_intro",
+      "file": "card-01.png",
+      "sha256": "fde1ce7646d1933becab5cc98ceaf7fea1fce4d8aba254e3b4c0df349ed1bbf1",
+      "dimensions": [
+        1080,
+        1440
+      ],
+      "source_character_count": 41,
+      "source_text_sha256": "7385193569c42d504a305d653ced915e12ab5298a8155ac978d6d80e12331ef1"
+    },
+    {
+      "number": 2,
+      "type": "prose",
+      "file": "card-02.png",
+      "sha256": "e9049f9a50cb367562bc5fce893b7c8582de20f7b2fc527399dc562ca6e1aad3",
+      "dimensions": [
+        1080,
+        1440
+      ],
+      "source_character_count": 60,
+      "source_text_sha256": "eb0f50deaa88dcd1f53e23b3bc8127f405416d0bb6faa6dfbfbe0b6f6fcefb1d"
+    },
+    {
+      "number": 3,
+      "type": "bullet_list",
+      "file": "card-03.png",
+      "sha256": "9ac2fa94035568eb0c9a6920687d5c331f92b6fdc0ca110222265cc7fc00474d",
+      "dimensions": [
+        1080,
+        1440
+      ],
+      "source_character_count": 42,
+      "source_text_sha256": "5b311b1149f21e13ed9266ff4a62bae031210b6e41b986f7e05cc122452fa217"
+    },
+    {
+      "number": 4,
+      "type": "numbered_framework",
+      "file": "card-04.png",
+      "sha256": "7ab536ed27f6e23a6c1b98e7e57b36b75bbc365f0e7840a5b749e26a59579c45",
+      "dimensions": [
+        1080,
+        1440
+      ],
+      "source_character_count": 53,
+      "source_text_sha256": "5340efd14aaedd5063e9ced78b35547b195d8e4cf6f76347c78007ad6c95ca89"
+    },
+    {
+      "number": 5,
+      "type": "two_column",
+      "file": "card-05.png",
+      "sha256": "d3dcd4b9fe5482fbf0ab349337300b9dde513074690471ea72e85081efb75724",
+      "dimensions": [
+        1080,
+        1440
+      ],
+      "source_character_count": 55,
+      "source_text_sha256": "53c74f8b14e9ba551dcb19e68c21f5b4364b7f9cc093704536a9a11f592b54b1"
+    },
+    {
+      "number": 6,
+      "type": "callout",
+      "file": "card-06.png",
+      "sha256": "5d51294664dbb104f969f736662d25ba4968c639db429328947fa4638239b296",
+      "dimensions": [
+        1080,
+        1440
+      ],
+      "source_character_count": 22,
+      "source_text_sha256": "b696ac5ae327753d09fcaf153627e1973b8350fd7fb26e506e297ac042879cc9"
+    },
+    {
+      "number": 7,
+      "type": "cta",
+      "file": "card-07.png",
+      "sha256": "cf0dbed46ca895dff0db9f0f3f91b593061f44eb2732a03ec044e7c63e8c09fa",
+      "dimensions": [
+        1080,
+        1440
+      ],
+      "source_character_count": 17,
+      "source_text_sha256": "6cf94046587aeea80f41c1b672736a61eba6d776a9cc7646b1f776b382e79c0f"
+    },
+    {
+      "number": 8,
+      "type": "references",
+      "file": "card-08.png",
+      "sha256": "efd9b923be833b9cc577185588998216e117c369f934727f78c11fa1c71377a9",
+      "dimensions": [
+        1080,
+        1440
+      ],
+      "source_character_count": 73,
+      "source_text_sha256": "4a195563941154507a298af53ed73ab14bc53931e299b5a262a7c78c0d3fed6c"
+    }
+  ],
+  "structural_transformations": [
+    {
+      "type": "semantic_page_assignment",
+      "page": 1,
+      "page_type": "section_intro",
+      "body_text_changed": false
+    },
+    {
+      "type": "semantic_page_assignment",
+      "page": 2,
+      "page_type": "prose",
+      "body_text_changed": false
+    },
+    {
+      "type": "semantic_page_assignment",
+      "page": 3,
+      "page_type": "bullet_list",
+      "body_text_changed": false
+    },
+    {
+      "type": "semantic_page_assignment",
+      "page": 4,
+      "page_type": "numbered_framework",
+      "body_text_changed": false
+    },
+    {
+      "type": "semantic_page_assignment",
+      "page": 5,
+      "page_type": "two_column",
+      "body_text_changed": false
+    },
+    {
+      "type": "semantic_page_assignment",
+      "page": 6,
+      "page_type": "callout",
+      "body_text_changed": false
+    },
+    {
+      "type": "semantic_page_assignment",
+      "page": 7,
+      "page_type": "cta",
+      "body_text_changed": false
+    },
+    {
+      "type": "semantic_page_assignment",
+      "page": 8,
+      "page_type": "references",
+      "body_text_changed": false
+    }
+  ],
+  "source_reconciliation": {
+    "status": "passed",
+    "source_path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/tests/article-render/sample.txt",
+    "source_sha256": "0ffab5004ea605c444f4a03002d7ecb9eb9e2b6b2d478ddb6dff526476dc22f3",
+    "normalized_character_count": 363
+  },
+  "review_artifact": {
+    "file": "contact-sheet.png",
+    "sha256": "02694770ef22556144ee4032f1f956e92ded93c4732d37464cdeaebccf0b527b"
+  }
+}

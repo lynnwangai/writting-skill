@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "stage": "txt_to_md",
+  "source": {
+    "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/vendor/xhs-note-creator/assets/example.txt",
+    "filename": "example.txt",
+    "sha256": "5f7b4e32ecdab26fb32a6ea2321177cc97909e47f60c01e7fb7afb409a623c72",
+    "encoding": "utf-8"
+  },
+  "output": {
+    "path": "/Users/lynnwang/Documents/Coding_project/writting_editorial/output/quietly-giving-away-credit/first-conversion/rendered.md",
+    "sha256": "e8455d32ef49ce7b968dab0e4230a4b0e016a7041a2de56bc9a1fc98b67668c4"
+  },
+  "metadata": {
+    "title": "你以为这是体面，可能只是在默默把自己的功劳让出去",
+    "subtitle": "",
+    "series_label": "社会观察",
+    "footer_label": "POWER & BEHAVIOR",
+    "source_file": "example.txt",
+    "source_format": "txt",
+    "conversion_mode": "faithful"
+  },
+  "transformations": [
+    {
+      "type": "add_yaml_front_matter",
+      "body_text_changed": false
+    }
+  ],
+  "semantic_classification": "not_performed"
+}
